@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+
+
+    <div class="container"><br><br>
+        <h1 class="fw-bold">Employee Managements</h1>
+        <br><br>
+
+        <form id="employeeForm" class="col-md-6">
+          <div class="mb-3">
+            <label for="Employee" class="form-label">Employee Id</label>
+            <input type="text" class="form-control" id="empId">
+            
+          </div>
+            <div class="mb-3">
+              <label for="Employee" class="form-label">Employee Name</label>
+              <input type="text" class="form-control" id="empname">
+              
+            </div>
+            <div class="mb-3">
+                <label for="Employee" class="form-label">Employee Email</label>
+                <input type="text" class="form-control" id="empmail">
+                
+              </div>
+              <div class="mb-3">
+                <label for="Employee" class="form-label">Employee Designation</label>
+                <input type="text" class="form-control" id="empdes">
+                
+              </div>
+              <div class="mb-3">
+                <label for="Employee" class="form-label">Employee Phone:N0</label>
+                <input type="text" class="form-control" id="empno">
+                
+              </div>
+              <button type="submit" class="btn btn-primary">Add Employee</button>
+          </form>
+          <br><br>
+          <h4 class="fw-bold">Search Employee by ID</h4>
+          <br>
+        <input type="number" id="searchId" class="form-control mb-2" placeholder="Enter Employee ID">
+        <br>
+        <button onclick="getEmployeeById()" class="btn btn-primary mb-3">Search</button>
+
+           
+        
+           
+    <br><br>
+    <h3 class="fw-bold">Employee List</h3> <br>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Designation</th>
+                <th>Phone</th>
+            </tr>
+        </thead>
+        <tbody id="employeeTableBody">
+        </tbody>
+    </table> 
+  
+  </div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    let employeeForm = document.getElementById('employeeForm');
+
+    //  let btn = document.getElementById('btn');
+  
+    // let tempCardContainer = document.getElementById('tempCardContainer');
+    // tempCardContainer.style.display='none';
+
+
+
+
+document.getElementById('employeeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            let empId = document.getElementById('empId').value;
+            let empname = document.getElementById('empname').value;
+            let empmail = document.getElementById('empmail').value;
+            let empdes = document.getElementById('empdes').value;
+            let empno = document.getElementById('empno').value;
+
+            try {
+                await axios.post('http://localhost:3000/employeeAdd', {
+                  empId,
+                    empname,
+                    empmail,
+                    empdes,
+                    empno
+                });
+                alert('Employee Added Successfully');
+                loadEmployees();
+            } catch (error) {
+                console.error(error);
+            }
+        });
+
+        async function loadEmployees() {
+            try {
+                const response = await axios.get('http://localhost:3000/employeeGet');
+                let employees = response.data;
+                let tableBody = document.getElementById('employeeTableBody');
+                tableBody.innerHTML = '';
+
+                employees.forEach(emp => {
+                    let row = `<tr>
+                        <td>${emp.empId}</td>
+                        <td>${emp.empname}</td>
+                        <td>${emp.empmail}</td>
+                        <td>${emp.empdes}</td>
+                        <td>${emp.empno}</td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function getEmployeeById() {
+            let empId = document.getElementById('searchId').value;
+            if (!empId) {
+                alert("Please enter an ID!");
+                return;
+            }
+            try {
+                const response = await axios.get(`http://localhost:3000/employee/${empId}`);
+                alert(`Employee Found:\nName: ${response.data.empname}\nEmail: ${response.data.empmail}`);
+            } catch (error) {
+                alert("Employee not found!");
+            }
+        }
+
+        loadEmployees(); // Load employees on page load
+
+    //  app.use('/', express.static(path.join(__dirname, 'public')))
+</script>
+  </body>
+</html>
+
+

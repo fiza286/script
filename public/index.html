@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+
+
+    <div class="container"><br><br>
+   
+        <h1>Weather App</h1>
+        <br>
+        <a href="/post.html" class="btn btn-danger">Personal Information</a>
+        <br><br>
+        <form id="WeatherForm" class="col-md-6">
+            
+            <div class="mb-3">
+              <label for="cityName" class="form-label">Weather City Name</label>
+              <input type="text" class="form-control" id="cityName">
+              
+            </div>
+        
+            <button type="submit" id="btn" class="btn btn-primary">Check Weather</button>
+          </form>
+  
+    <br><br>
+    <div class="card" id="tempCardContainer" style="width: 250px; padding: 20px;margin-top: 10px;">
+   <h4 id="temp"></h4>
+   <p id="city" style="color: grey;"></p>
+</div>  </div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    let weatherForm = document.getElementById('weatherform');
+
+     let btn = document.getElementById('btn');
+    let cityName = document.getElementById('cityName');
+    let tempCardContainer = document.getElementById('tempCardContainer');
+    tempCardContainer.style.display='none';
+    WeatherForm.addEventListener('submit', async(e)=> {
+        e.preventDefault();
+
+        console.log(cityName.value)
+        try{
+            const response = await axios.get(`http://localhost:3000/weather/${cityName.value}`);
+    console.log(response);
+
+let temp = document.getElementById('temp');
+let city = document.getElementById('city');
+
+temp.innerText = response.data.temp;
+city.innerText = response.data.cityName;
+
+if(response.status == 200){
+    tempCardContainer.style.display = 'block';
+    temp.innerText = response.data.tempInC ?? 'No data found';
+    city.innerText = response.data.cityName ?? '';
+}
+
+        } catch (error) {
+    console.error(error);
+  }
+    })
+    app.use('/', express.static(path.join(__dirname, 'public')))
+</script>
+  </body>
+</html>
